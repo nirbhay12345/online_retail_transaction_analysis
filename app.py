@@ -54,7 +54,7 @@ with st.sidebar:
     count_per_group = grouped_df.size()
     count_per_group = count_per_group.reset_index(name='Sales per Day')
 
-    st.metric("Unique Customers By Selected Items", selecte_item_data.groupby('StockCode')['CustomerID'].count().sum())
+    st.metric("Unique Customers By Selected Items", selecte_item_data['CustomerID'].nunique())
     revenue = "$ " + str(selecte_item_data['TotalPrice'].count().sum())
     st.metric("Total Revenue By Selected Items", revenue)
     
