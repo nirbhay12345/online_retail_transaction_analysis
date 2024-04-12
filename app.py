@@ -43,7 +43,8 @@ with st.sidebar:
 
     # Selected products
     description = data[data['StockCode'].isin(selected_item)]
-    products = [i for i in description['Description'].unique()]
+    description['items'] = description['StockCode'] + ' - ' + description['Description']
+    products = [i for i in description['items'].unique()]
 
     prod = ''
     for i in products:
@@ -89,10 +90,10 @@ with st.sidebar:
     st.text(count)
 
 
-tab1, tab2, tab3 = st.tabs(["Sales Trends", "Distribution (World)", "Tabular"])
+tab1, tab2, tab3, tab4 = st.tabs(["Sales Trends", "Distribution (World)", "Tabular", "Stats"])
 
 with tab1:
-    st.line_chart(
+    st.area_chart(
         count_per_group,
         x='Date',
         y='Sales per Day',
@@ -105,7 +106,7 @@ with tab2:
                         locations="CountryCode",
                         color="TotalPrice", # lifeExp is a column of gapminder
                         hover_name="Quantity", # column to add to hover information
-                        color_continuous_scale=px.colors.sequential.speed
+                        color_continuous_scale=px.colors.sequential.Rainbow
                     )
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
@@ -115,3 +116,36 @@ with tab3:
         hide_index=True,
         use_container_width=True
     )
+
+with tab4:
+
+    r1 = st.columns(2)
+
+    with r1[0]:
+        fig_2 = px.pie(
+            map_data, 
+            values='Quantity', 
+            names='Country', 
+            title='Quantity per Country'
+        )
+        st.plotly_chart(fig_2, theme="streamlit", use_container_width=True)
+    
+    with r1[1]:
+        group_per_country = selecte_item_data.groupby('Country')['CustomerID'].nunique()
+        customer_per_country = group_per_country.reset_index()
+        fig_3 = px.pie(
+            customer_per_country, 
+            values='CustomerID', 
+            names='Country', 
+            title='Customers Distribution'
+        )
+        st.plotly_chart(fig_3, theme="streamlit", use_container_width=True)
+
+    fig_3 = px.pie(
+        map_data, 
+        values='TotalPrice', 
+        names='Country', 
+        title='Sales(Revenue) per Country'
+    )
+    st.plotly_chart(fig_3, theme="streamlit", use_container_width=True)
+    
