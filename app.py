@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import math
 import pycountry
 
 countries = {}
@@ -31,7 +32,7 @@ def load_data(nrows):
  
 data_load_state = st.text('Loading data...')
 # 541909
-data = load_data(100000)
+data = load_data(200000)
 data_load_state.text("")
 
 
@@ -49,6 +50,9 @@ with st.sidebar:
 
     prod = ''
     for i in products:
+        if type(i) is not str:
+            if  math.isnan(i):
+                continue
         prod = prod + str(i) + '\n'
 
     # Sales per day analysis
@@ -105,8 +109,8 @@ with tab1:
 with tab2:
     fig = px.choropleth(sales_per_group, 
                         locations="CountryCode",
-                        color="TotalPrice", # lifeExp is a column of gapminder
-                        hover_name="Quantity", # column to add to hover information
+                        color="TotalPrice", 
+                        hover_name="Quantity", 
                         color_continuous_scale=px.colors.sequential.Rainbow
                     )
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
