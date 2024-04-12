@@ -30,14 +30,15 @@ def load_data(nrows):
     return data
  
 data_load_state = st.text('Loading data...')
-data = load_data(20000)
+# 541909
+data = load_data(100000)
 data_load_state.text("")
 
 
 with st.sidebar:
     selected_item = st.multiselect(
                         'Stock Code', 
-                        data['StockCode'],
+                        data['StockCode'].unique(),
                         default=None
                     )
 
@@ -48,7 +49,7 @@ with st.sidebar:
 
     prod = ''
     for i in products:
-        prod = prod + i + '\n'
+        prod = prod + str(i) + '\n'
 
     # Sales per day analysis
     selecte_item_data = data[data['StockCode'].isin(selected_item)]
@@ -122,30 +123,34 @@ with tab4:
     r1 = st.columns(2)
 
     with r1[0]:
+        group_per_stock = selecte_item_data.groupby('StockCode')['Quantity'].nunique()
+        quantity_per_stock = group_per_stock.reset_index()
         fig_2 = px.pie(
-            map_data, 
+            quantity_per_stock, 
             values='Quantity', 
-            names='Country', 
-            title='Quantity per Country'
+            names='StockCode', 
+            title='Quantity Sold per Item'
         )
         st.plotly_chart(fig_2, theme="streamlit", use_container_width=True)
     
     with r1[1]:
-        group_per_country = selecte_item_data.groupby('Country')['CustomerID'].nunique()
-        customer_per_country = group_per_country.reset_index()
+        group_per_stock = selecte_item_data.groupby('StockCode')['CustomerID'].nunique()
+        customer_per_stock = group_per_stock.reset_index()
         fig_3 = px.pie(
-            customer_per_country, 
+            customer_per_stock, 
             values='CustomerID', 
-            names='Country', 
-            title='Customers Distribution'
+            names='StockCode', 
+            title='Customers Distribution per Item'
         )
         st.plotly_chart(fig_3, theme="streamlit", use_container_width=True)
 
+    group_per_stock = selecte_item_data.groupby('StockCode')['TotalPrice'].nunique()
+    revenue_per_stock = group_per_stock.reset_index()
     fig_3 = px.pie(
-        map_data, 
+        revenue_per_stock, 
         values='TotalPrice', 
-        names='Country', 
-        title='Sales(Revenue) per Country'
+        names='StockCode', 
+        title='Sales(Revenue) per Item'
     )
     st.plotly_chart(fig_3, theme="streamlit", use_container_width=True)
     
