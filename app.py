@@ -32,7 +32,7 @@ def load_data(nrows):
  
 data_load_state = st.text('Loading data...')
 # 541909
-data = load_data(200000)
+data = load_data(541909)
 data_load_state.text("")
 
 
