@@ -88,7 +88,7 @@ with st.sidebar:
         sales = "$ " + str(round(selecte_item_data['TotalPrice'].sum(), 2))
         st.metric("Total Sales", sales)
 
-    st.subheader(f'Selected products: \n ')
+    st.subheader('Selected products: \n ')
     st.text(prod)
 
     st.subheader('Countries:')
