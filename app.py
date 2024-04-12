@@ -22,7 +22,7 @@ DATA_URL = './data/online_retail.csv'
 @st.cache_data
 def load_data(nrows):
     data = pd.read_csv(DATA_URL, nrows=nrows)
-    lowercase = lambda x: str(x).lower()
+    # lowercase = lambda x: str(x).lower()
     # data.rename(lowercase, axis='columns', inplace=True)
     data = data.drop('index', axis=1)
     data['InvoiceDate'] = pd.to_datetime(data['InvoiceDate'])
